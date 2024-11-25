@@ -26,9 +26,7 @@ const Header = () => {
     return (
         <div>
             <header className="header bg-gray-800 h-24 w-full">
-                { location.pathname !== "/" &&
-                    <button className="flex align-middle text-white" onClick={()=>(navigate(-1))}><IoIosArrowBack className="m-auto"/> Назад</button>
-                }
+                <button disabled={location.pathname === '/'} className={"flex align-middle text-white " + (location.pathname !== '/' ? 'opacity-100' : 'opacity-0')} onClick={()=>(navigate(-1))}><IoIosArrowBack className="m-auto"/> Назад</button>
                 <h2 className="text-center text-white w-full">JuniorRoadMap</h2>
                 <nav className="flex flex-row gap-x-6">
                     <Link to="/" className="header-item">
