@@ -24,6 +24,7 @@ const Button = ({ onClick, children, type = "button", style, disabled = false, b
       // Устанавливаем обработчики для наведения
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
+      className='bg-blue-600 text-white rounded-md'
     >
       {children}
     </button>

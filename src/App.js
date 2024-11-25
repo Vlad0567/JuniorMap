@@ -5,22 +5,25 @@ import 'react-toastify/dist/ReactToastify.css';
 import Header from './components/layout/Header';
 import Home from './pages/Home'
 import './App.css';
+import Subsection from "./pages/Subsection";
+import Profile from "./pages/Profile";
 
 function App() {
   return (
-    <>
+    <div>
       <Router>
         <div className="App">
-            <Header />
-            <main className="main-content">
               <Routes>
-                <Route path="/" element={<Home />} /> 
+                  <Route path="/" element={<Header />}>
+                      <Route path="/" element={<Home />} />
+                      <Route path="/profile" element={<Profile />} />
+                      <Route path="/subsection/:id" element={<Subsection />} />
+                  </Route>
               </Routes>
-            </main>
         </div>
       </Router>
       <ToastContainer />
-    </>
+    </div>
   );
 }
 
