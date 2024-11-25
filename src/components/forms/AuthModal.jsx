@@ -1,13 +1,16 @@
-import React, { useState } from 'react';
+import React, {useContext, useState} from 'react';
 import Input from '../UI/Input';
 import Button from '../UI/Button';
 import './AuthModal.css';
 import axios from "../../api/axios";
 import { toast } from 'react-toastify';
+import AuthContext from "../../api/AuthContext";
 
 const AuthModal = ({ onClose, onLoginSuccess }) => {
+    const {token, username, isAuthenticated, login, logout} = useContext(AuthContext)
+
     const [isLoginMode, setIsLoginMode] = useState(true);
-    const [username, setUsername] = useState('');
+    const [inputUsername, setInputUsername] = useState('');
     const [password, setPassword] = useState('');
     const [birthDate, setBirthDate] = useState('');
     const [usernameValid, setUsernameValid] = useState({
@@ -25,7 +28,7 @@ const AuthModal = ({ onClose, onLoginSuccess }) => {
 
     // Валидация логина
     const validateUsername = (value) => {
-        setUsername(value);
+        setInputUsername(value);
 
         const localValidation = {
             minLength: value.length >= 6,
@@ -47,7 +50,7 @@ const AuthModal = ({ onClose, onLoginSuccess }) => {
         });
         setUsernameValid((prev) => ({
             ...prev,
-            notSameAsPassword: value !== username && username.length > 0,
+            notSameAsPassword: value !== inputUsername && inputUsername.length > 0,
         }));
     };
 
@@ -68,7 +71,7 @@ const AuthModal = ({ onClose, onLoginSuccess }) => {
             try {
                 const response = await axios.post('/v1/user/create-client', {
                     client: {
-                        login: username,
+                        login: inputUsername,
                         password,
                         birth_date: birthDateUTC,
                         role: 0
@@ -93,17 +96,15 @@ const AuthModal = ({ onClose, onLoginSuccess }) => {
     const handleLogin = async () => {
         try {
             const response = await axios.post("/v1/auth/sign-in", 
-                { login: username, password: password }
+                { login: inputUsername, password: password }
             );
 
             if (response.data) {
                 const data = response.data;
                 
                 if (data) {
+                    login(inputUsername, data);
                     toast.success("Авторизация успешна");
-                    localStorage.setItem('isAuthenticated', 'true');
-                    localStorage.setItem('username', username); 
-                    localStorage.setItem('token', data); // сохраняем токен
                     onLoginSuccess();
                     onClose();
                 } else {
@@ -127,17 +128,18 @@ const AuthModal = ({ onClose, onLoginSuccess }) => {
                     <span className={`toggle-option ${!isLoginMode ? 'active' : ''}`} onClick={() => setIsLoginMode(false)}>Регистрация</span>
                 </div>
                 <h2>{isLoginMode ? 'Авторизация' : 'Регистрация'}</h2>
-                <Input placeholder="Логин" value={username} onChange={validateUsername} style={{margin:'1rem 0'}}/>
+                <Input placeholder="Логин" value={inputUsername} onChange={validateUsername} style={{margin:'1rem 0'}}/>
                 
                 {/* Поле для даты и валидация логина только для регистрации */}
                 {!isLoginMode && (
                     <>
-                        <input 
+                        <input
                             type="date" 
                             placeholder="Дата рождения" 
                             value={birthDate} 
                             onChange={handleBirthDateChange} 
-                            style={{ marginBottom: '1rem', width: '100%', padding: '0.5rem', fontSize: '1rem' }} 
+                            style={{ marginBottom: '1rem', width: '100%', padding: '0.5rem', fontSize: '1rem' }}
+                            className="outline outline-1 outline-black rounded-sm text-black"
                         />
                         <ul className="validation-list">
                             <li className={usernameValid.minLength ? 'valid' : 'invalid'}>Логин должен быть не менее 6 символов</li>

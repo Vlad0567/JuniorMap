@@ -23,6 +23,7 @@ const Input = ({ type = "text", placeholder = "", value, onChange, style}) => {
         value={value}
         onChange={handleInputChange}
         style={{ ...baseStyle, ...style }}
+        className="text-black"
     />
     </div>
     );
