@@ -3,6 +3,7 @@ import './Modal.css';
 import axios from "../../api/axios";
 import Badge from "../UI/Badge";
 import {Link} from "react-router-dom";
+import {toast} from "react-toastify";
 
 const Modal = ({nodeId, modalHeader, hideModal}) => {
 
@@ -10,17 +11,15 @@ const Modal = ({nodeId, modalHeader, hideModal}) => {
 
     useEffect(() => {
         if (nodeId){
-            console.log(nodeId);
             try {
                 axios.get(`/v1/subsection/get-subsections-by-section-id?sectionId=${nodeId}`).then((response) => {
                     if (response.status === 200) {
-                        console.log(response.data.subsections);
                         setSubsections(response.data.subsections);
                     }
 
                 });
             } catch (e) {
-                console.log('axios error', e);
+                toast.error('axios error', e);
             }
         }
     }, [nodeId]);
@@ -52,12 +51,16 @@ const Modal = ({nodeId, modalHeader, hideModal}) => {
 
                     <div className="p-4 md:p-5 space-y-4">
                         {
+                            subsections.length === 0 &&
+                            <h4 className="text-white font-semibold text-center">У данного узла отсутствуют доступные секции</h4>
+                        }
+                        {
                             subsections.map((el) => {
                                 return (
                                     <Link key={el.id} to={"/subsection/" + el.id} className="toSub">
                                     <button className="text-base p-3 align-middle leading-relaxed text-gray-100 z-50 w-full rounded-md hover:bg-gray-700">
-                                        { (el.status === 0) ?
-                                            <Badge content="" /> : null
+                                        { (el.status !== 2) ?
+                                            <Badge content="" status={subsections.status}/> : null
                                             } {el.name}
                                     </button>
                                     </Link>

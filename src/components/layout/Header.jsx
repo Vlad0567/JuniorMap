@@ -1,10 +1,9 @@
-import React, {useState, useEffect, useContext} from 'react';
+import React, {useState, useContext} from 'react';
 import AuthModal from '../forms/AuthModal';
 import {Link, Outlet, useLocation, useNavigate} from 'react-router-dom';
 import './Header.css';
 import {IoExitOutline, IoHomeOutline, IoPersonOutline} from "react-icons/io5";
 import AuthContext from "../../api/AuthContext";
-import {GiRoad} from "react-icons/gi";
 import {IoIosArrowBack} from "react-icons/io";
 
 const Header = () => {

@@ -9,16 +9,18 @@ const Home = () => {
     const [focusedNodeId, setFocusedNodeId] = useState("");
     const [modalVisibility, setModalVisibility] = useState(false);
 
+    const nodeColors = ["#9f9f9f", "#0080ff", "#9ff682"];
+
     useEffect(() => {
         try {
             axios.get("/v1/section/get-sections").then((response) => {
-                console.log(response.data.subsections);
                 if (response.data.subsections) {
                     const nodes = [];
                     const linkPromises = []; // Array to hold all link-fetching promises
 
                     response.data.subsections.map((el, index) => {
-                        nodes.push({ id: el.id, name: el.name, symbolType : "circle", x: el.id*100+300,  y: (Math.random()*2-1)*30+400 });
+                        console.log(el.status);
+                        nodes.push({ id: el.id, name: el.name, symbolType : "circle", x: el.id*100+300,  y: (Math.random()*2-1)*30+400, color: nodeColors[el.status]});
                         if (el.next_section_id) {
                             const linkPromise = axios.get(`/v1/section/get-section-by-id?id=${el.next_section_id}`).then((resp) => {
                                 if (resp.data.section) {
@@ -26,13 +28,11 @@ const Home = () => {
                                 }
                             });
                             linkPromises.push(linkPromise);
-                            // linkPromises.push({source: el.id, target: el.next_section_id});
                         }
                     });
                     Promise.all(linkPromises).then((resolvedLinks) => {
                         const links = resolvedLinks.filter(link => link); // Filter out undefined results
                         setData({ nodes, links });
-                        console.log(nodes);
                     });
                 }
             });
@@ -48,7 +48,7 @@ const Home = () => {
         initialZoom: 2,
         zoom: 1,
         staticGraph: true,
-        width: window.innerWidth/1,
+        width: window.innerWidth,
         height: window.innerHeight/1.2,
         d3: {
             alphaTarget: 0.05,
