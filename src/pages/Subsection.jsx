@@ -186,7 +186,7 @@ const Subsection = () => {
                                     )}
                                     { quizes.length === userAnswers.length &&
                                         <div className="flex flex-col justify-center">
-                                            <h3 className="text-md font-semibold text-center my-4">{sumCorrectAnswers}/{quizes.length} правильных ответов ({sumCorrectAnswers/quizes.length*100}%)</h3>
+                                            <h3 className="text-md font-semibold text-center my-4">{sumCorrectAnswers}/{quizes.length} правильных ответов ({Math.ceil(sumCorrectAnswers/quizes.length*100)}%)</h3>
                                             <button
                                                 className="bg-blue-600 p-4 text-white mx-auto rounded-xl"
                                                 onClick={reloadQuiz}
