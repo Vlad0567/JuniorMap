@@ -14,7 +14,10 @@ const Modal = ({nodeId, modalHeader, hideModal}) => {
             try {
                 axios.get(`/v1/subsection/get-subsections-by-section-id?sectionId=${nodeId}`).then((response) => {
                     if (response.status === 200) {
-                        setSubsections(response.data.subsections);
+                        let sortedSubsection = response.data.subsections.sort((a, b) => {
+                            return a.id > b.id;
+                        });
+                        setSubsections(sortedSubsection);
                     }
 
                 });

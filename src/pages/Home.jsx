@@ -85,7 +85,7 @@ const Home = () => {
     }
 
     return(
-        <div className="container w-full overflow-hidden">
+        <div className="container w-full overflow-visible">
             <Graph
                 id="roadmap"
                 data={data}
